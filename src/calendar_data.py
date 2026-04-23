@@ -4,7 +4,7 @@ import calendar
 from dataclasses import dataclass, field
 from datetime import date
 from typing import Dict, List, Optional
-
+from annotations import build_annotation_lookup
 
 @dataclass(frozen=True)
 class SpecialDate:
@@ -16,16 +16,14 @@ class SpecialDate:
 
 @dataclass(frozen=True)
 class DayCell:
-    """Represents a single cell in a month grid."""
     dt: date
     day: int
     in_current_month: bool
-    special_label: str = ""
-    special_emoji: str = ""
+    annotations: List[str] = field(default_factory=list)
 
     @property
     def is_special(self) -> bool:
-        return bool(self.special_label or self.special_emoji)
+        return bool(self.annotations)
 
 
 @dataclass(frozen=True)
@@ -44,6 +42,12 @@ class PageData:
     page_number: int
     months: List[MonthData] = field(default_factory=list)
 
+@dataclass(frozen=True)
+class DateAnnotation:
+    dt: date
+    category: str
+    marker: str
+    label: str = ""
 
 def iter_months(start_year: int, start_month: int, end_year: int, end_month: int):
     """
@@ -60,26 +64,17 @@ def iter_months(start_year: int, start_month: int, end_year: int, end_month: int
             month += 1
 
 
-def build_special_dates_lookup(special_dates: Optional[List[SpecialDate]] = None) -> Dict[date, SpecialDate]:
-    """
-    Convert a list of SpecialDate objects into a date-keyed lookup dictionary.
-    """
-    if not special_dates:
-        return {}
-    return {item.dt: item for item in special_dates}
-
-
 def build_month_data(
     year: int,
     month: int,
-    special_lookup: Optional[Dict[date, SpecialDate]] = None,
+    annotation_lookup: Optional[Dict[date, list]] = None,
     week_starts_on_sunday: bool = True,
 ) -> MonthData:
     """
     Build all display data for a single month, including leading/trailing days.
     """
-    if special_lookup is None:
-        special_lookup = {}
+    if annotation_lookup is None:
+        annotation_lookup = {}
 
     first_weekday = calendar.SUNDAY if week_starts_on_sunday else calendar.MONDAY
     cal = calendar.Calendar(firstweekday=first_weekday)
@@ -95,14 +90,14 @@ def build_month_data(
     for week in cal.monthdatescalendar(year, month):
         week_cells: List[DayCell] = []
         for dt in week:
-            special = special_lookup.get(dt)
+            annotations = annotation_lookup.get(dt, [])
+            markers = [item.marker for item in annotations]
             week_cells.append(
                 DayCell(
                     dt=dt,
                     day=dt.day,
                     in_current_month=(dt.month == month),
-                    special_label=special.label if special else "",
-                    special_emoji=special.emoji if special else "",
+                    annotations=markers,
                 )
             )
         weeks.append(week_cells)
@@ -121,13 +116,13 @@ def build_calendar_range(
     start_month: int,
     end_year: int,
     end_month: int,
-    special_dates: Optional[List[SpecialDate]] = None,
+    annotation_lookup: Optional[Dict[date, list]] = None,
     week_starts_on_sunday: bool = True,
 ) -> List[MonthData]:
     """
     Build MonthData objects for an inclusive range of months.
     """
-    special_lookup = build_special_dates_lookup(special_dates)
+    
 
     months: List[MonthData] = []
     for year, month in iter_months(start_year, start_month, end_year, end_month):
@@ -135,7 +130,7 @@ def build_calendar_range(
             build_month_data(
                 year=year,
                 month=month,
-                special_lookup=special_lookup,
+                annotation_lookup=annotation_lookup,
                 week_starts_on_sunday=week_starts_on_sunday,
             )
         )
@@ -160,28 +155,19 @@ def chunk_months_into_pages(months: List[MonthData], months_per_page: int = 4) -
     return pages
 
 
-def default_special_dates() -> List[SpecialDate]:
-    """
-    Placeholder special dates for early development.
-    Replace or expand these as the gift details become more specific.
-    """
-    return [
-        SpecialDate(dt=date(2025, 4, 29), label="Anniversary", emoji="❤️"),
-        SpecialDate(dt=date(2026, 4, 29), label="Anniversary", emoji="❤️"),
-    ]
-
-
 def build_project_calendar_data() -> List[PageData]:
     """
     Build the inside calendar pages for the project:
     May 2024 through April 2026, 6 months per page.
     """
+    annotation_lookup = build_annotation_lookup()
+
     months = build_calendar_range(
         start_year=2024,
         start_month=5,
         end_year=2026,
         end_month=4,
-        special_dates=default_special_dates(),
+        annotation_lookup=annotation_lookup,
         week_starts_on_sunday=True,
     )
 

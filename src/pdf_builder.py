@@ -168,10 +168,10 @@ def draw_continuous_column(
             c.setFont("Helvetica", 7.5)
 
             label = str(day.day)
-            if day.is_special and day.special_emoji:
-                label = f"{day.day} {day.special_emoji}"
-            elif day.is_special and day.special_label:
-                label = f"{day.day} *"
+
+            if day.annotations:
+                marker_text = "/".join(day.annotations)
+                label = f"{day.day} {marker_text}"
 
             c.drawString(text_x, text_y, label)
 
