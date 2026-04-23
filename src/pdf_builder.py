@@ -11,6 +11,8 @@ from reportlab.pdfgen import canvas
 
 from calendar_data import DayCell, MonthData, PageData
 
+from annotations import CATEGORY_STYLES
+
 
 PAGE_WIDTH, PAGE_HEIGHT = letter
 
@@ -395,6 +397,48 @@ def build_full_pdf(
     c.save()
     return output_path
 
+def draw_legend_page(c: canvas.Canvas) -> None:
+    """
+    Draw a legend page based on CATEGORY_STYLES from annotations.py.
+    """
+    SOFT_TEXT = Color(0.35, 0.35, 0.35)
+    LIGHT_LINE = Color(0.82, 0.82, 0.82)
+    c.setFillColor(SOFT_TEXT)
+    title_y = PAGE_HEIGHT * 0.78
+    c.setFont("Helvetica-Bold", 22)
+    c.drawCentredString(PAGE_WIDTH / 2, title_y, "Calendar Legend")
+    c.setFont("Helvetica", 11)
+    c.drawCentredString(
+        PAGE_WIDTH / 2,
+        title_y - 24,
+        "Tiny marks for big memories"
+    )
+    start_y = title_y - 80
+    row_height = 28
+    legend_items = sorted(
+        CATEGORY_STYLES.items(),
+        key=lambda item: item[0].lower(),
+    )
+    left_x = PAGE_WIDTH * 0.30
+    marker_x = left_x
+    label_x = left_x + 55
+    c.setFont("Helvetica", 12)
+    for idx, (category, style) in enumerate(legend_items):
+        y = start_y - idx * row_height
+        marker = style.get("marker", "")
+        label = style.get("label", category)
+        c.setFillColor(SOFT_TEXT)
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(marker_x, y, marker)
+        c.setFont("Helvetica", 12)
+        c.drawString(label_x, y, label)
+        c.setStrokeColor(LIGHT_LINE)
+        c.setLineWidth(0.25)
+        c.line(left_x, y - 8, PAGE_WIDTH * 0.70, y - 8)
+    # Small footer heart
+    c.setFillColor(SOFT_TEXT)
+    c.setFont("Helvetica", 14)
+    c.drawCentredString(PAGE_WIDTH / 2, PAGE_HEIGHT * 0.16, "♥")
 
 def build_combined_pdf(
     output_path: str | Path,
@@ -402,22 +446,27 @@ def build_combined_pdf(
 ) -> Path:
     """
     Build the final combined PDF:
-    - cover page first
-    - then all inside calendar pages
+    - cover page
+    - inside calendar pages
+    - legend page
     """
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     c = canvas.Canvas(str(output_path), pagesize=letter)
 
-    # Cover page
+    # Page 1: cover
     draw_cover_page(c)
     c.showPage()
 
-    # Inside pages
+    # Pages 2-5: inside calendar pages
     for page_data in pages:
         draw_page_of_months(c, page_data)
         c.showPage()
+
+    # Page 6: legend
+    draw_legend_page(c)
+    c.showPage()
 
     c.save()
     return output_path

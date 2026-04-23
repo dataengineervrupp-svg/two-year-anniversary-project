@@ -22,7 +22,7 @@ def main() -> None:
     print(f"Created cover page PDF: {cover_pdf_path.resolve()}")
     print(f"Created combined PDF: {combined_pdf_path.resolve()}")
     print(f"Total inside pages generated: {len(pages)}")
-    print(f"Total pages in combined PDF: {len(pages) + 1}")
+    print(f"Total pages in combined PDF: {len(pages) + 2}")
 
 
 if __name__ == "__main__":
