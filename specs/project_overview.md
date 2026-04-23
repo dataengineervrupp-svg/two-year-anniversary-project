@@ -6,7 +6,7 @@ Create a printable anniversary calendar gift for Connie.
 
 ## Concept
 
-- Cover page highlights April 29 in a decorative way
+- Cover page highlights April 29, 2026
 - Inside pages cover May 2024 through April 2026
 - Calendar will be printed on heavy art paper
 - Final design should leave room for hand-added calligraphy and decoration
@@ -22,7 +22,10 @@ Create a printable anniversary calendar gift for Connie.
 - Month transitions are labeled inline within the column
 - Non-current-month dates are not shown
 
-## Design Intent
+## Current Cover-Page Layout
 
-The calendar pages serve as a background layer rather than a traditional boxed planner layout.
-The page should feel visually seamless so decoration and calligraphy can flow over it.
+- One central calendar-style date box
+- Date box placed near the optical center
+- Date box occupies about 10% of total page area
+- Emoji story appears above the date box
+- Cover is intentionally simple to allow later decorative additions

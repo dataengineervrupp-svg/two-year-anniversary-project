@@ -6,6 +6,7 @@ from typing import List
 
 from reportlab.lib.colors import Color
 from reportlab.lib.pagesizes import letter
+from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
 
 from calendar_data import DayCell, MonthData, PageData
@@ -208,6 +209,156 @@ def draw_page_of_months(
             width=COLUMN_WIDTH,
             height=column_height,
         )
+
+
+def wrap_text_for_canvas(
+    text: str,
+    font_name: str,
+    font_size: float,
+    max_width: float,
+) -> List[str]:
+    words = text.split()
+    if not words:
+        return []
+
+    lines: List[str] = []
+    current = words[0]
+
+    for word in words[1:]:
+        trial = f"{current} {word}"
+        if stringWidth(trial, font_name, font_size) <= max_width:
+            current = trial
+        else:
+            lines.append(current)
+            current = word
+
+    lines.append(current)
+    return lines
+
+def draw_cover_page(c: canvas.Canvas) -> None:
+    """
+    Draw the anniversary cover page with:
+    - blank title area at top
+    - two centered date boxes
+    - arrow between them
+    - small heart below
+    """
+
+    SOFT_LINE = Color(0.6, 0.6, 0.6)
+    SOFT_TEXT = Color(0.5, 0.5, 0.5)
+
+    c.setStrokeColor(SOFT_LINE)
+    c.setFillColor(SOFT_TEXT)
+
+    # ---------------------------------
+    # Horizontal layout: 20/20/20/20/20
+    # ---------------------------------
+    page_w = PAGE_WIDTH
+    page_h = PAGE_HEIGHT
+
+    left_margin = page_w * 0.20
+    box_width = page_w * 0.20
+    center_gap = page_w * 0.20
+    box_height = box_width
+
+    left_box_x = left_margin
+    right_box_x = left_margin + box_width + center_gap
+    left_box_center_x = left_box_x + box_width / 2
+    right_box_center_x = right_box_x + box_width / 2
+    page_center_x = page_w / 2
+
+    # ---------------------------------
+    # Vertical placement
+    # ---------------------------------
+    # Lower on page to leave title/message area above
+    center_y = page_h * 0.42
+    box_y = center_y - box_height / 2
+
+    def draw_date_box(x: float, y: float, month: str, year: str, day: int, weekday: str) -> None:
+        c.setLineWidth(0.8)
+        c.rect(x, y, box_width, box_height)
+
+        band_height = box_height * 0.22
+        c.line(x, y + box_height - band_height, x + box_width, y + box_height - band_height)
+
+        # Month/year
+        c.setFont("Helvetica-Bold", 14)
+        c.drawCentredString(
+            x + box_width / 2,
+            y + box_height - band_height / 2 - 5,
+            f"{month} {year}",
+        )
+
+        # Day number
+        c.setFont("Helvetica-Bold", 48)
+        c.drawCentredString(
+            x + box_width / 2,
+            y + box_height * 0.44,
+            str(day),
+        )
+
+        # Weekday
+        c.setFont("Helvetica", 12)
+        c.drawCentredString(
+            x + box_width / 2,
+            y + box_height * 0.16,
+            weekday,
+        )
+
+    # Left date box
+    draw_date_box(
+        left_box_x,
+        box_y,
+        "APRIL",
+        "2024",
+        29,
+        "Monday",
+    )
+
+    # Right date box
+    draw_date_box(
+        right_box_x,
+        box_y,
+        "APRIL",
+        "2026",
+        29,
+        "Wednesday",
+    )
+
+    # ---------------------------------
+    # Arrow centered in the 20% middle gap
+    # ---------------------------------
+    arrow_y = center_y
+    arrow_left_x = left_box_x + box_width + 18
+    arrow_right_x = right_box_x - 18
+
+    c.setLineWidth(1.0)
+    c.line(arrow_left_x, arrow_y, arrow_right_x, arrow_y)
+
+    # Arrow head
+    c.line(arrow_right_x, arrow_y, arrow_right_x - 8, arrow_y + 5)
+    c.line(arrow_right_x, arrow_y, arrow_right_x - 8, arrow_y - 5)
+
+    # ---------------------------------
+    # Small heart below
+    # ---------------------------------
+    c.setFont("Helvetica", 16)
+    c.drawCentredString(
+        page_center_x,
+        box_y - 28,
+        "♥",
+    )
+
+def build_cover_pdf(output_path: str | Path) -> Path:
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    c = canvas.Canvas(str(output_path), pagesize=letter)
+    draw_cover_page(c)
+    c.showPage()
+    c.save()
+
+    return output_path
 
 
 def build_proof_pdf(

@@ -2,14 +2,14 @@
 
 ## Current Tasks
 
-1. Generate full inside-pages PDF with current seamless column layout
-2. Review printed proof on real paper
-3. Decide cover-page design for April 29
+1. Review printed proof of inside pages
+2. Review printed proof of cover page
+3. Tune cover-page typography and spacing if needed
 4. Finalize special-date annotations
 
 ## Future Tasks
 
-- Design and generate cover page
 - Add final special-date markers and symbols
+- Decide whether to merge cover and inside pages into one final PDF
 - Tune for final print quality
 - Export final complete anniversary calendar PDF
