@@ -3,18 +3,17 @@ from __future__ import annotations
 from pathlib import Path
 
 from calendar_data import build_project_calendar_data
-from pdf_builder import build_proof_pdf
+from pdf_builder import build_full_pdf
 
 
 def main() -> None:
     pages = build_project_calendar_data()
 
-    first_page = pages[0]
+    output_path = Path("output") / "calendar_inside_pages.pdf"
+    pdf_path = build_full_pdf(output_path, pages)
 
-    output_path = Path("output") / "calendar_proof_page_1_six_months.pdf"
-    pdf_path = build_proof_pdf(output_path, first_page)
-
-    print(f"Created proof PDF: {pdf_path.resolve()}")
+    print(f"Created full calendar PDF: {pdf_path.resolve()}")
+    print(f"Total inside pages generated: {len(pages)}")
 
 
 if __name__ == "__main__":

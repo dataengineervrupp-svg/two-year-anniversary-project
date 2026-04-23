@@ -2,14 +2,14 @@
 
 ## Current Tasks
 
-1. Generate calendar data for May 2024 through April 2026
-2. Verify month grouping into 6 pages of 4 months each
-3. Add support for special annotated dates
-4. Build first PDF proof page
+1. Generate full inside-pages PDF with current seamless column layout
+2. Review printed proof on real paper
+3. Decide cover-page design for April 29
+4. Finalize special-date annotations
 
 ## Future Tasks
 
-- Design cover page
-- Decide annotation style
-- Build full 6-page inside layout
-- Add final print styling
+- Design and generate cover page
+- Add final special-date markers and symbols
+- Tune for final print quality
+- Export final complete anniversary calendar PDF
