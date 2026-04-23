@@ -2,13 +2,14 @@
 
 ## Current Tasks
 
-1. Create Python virtual environment
-2. Install required libraries
-3. Generate date logic for last 24 months
-4. Render first test month PDF
+1. Generate calendar data for May 2024 through April 2026
+2. Verify month grouping into 6 pages of 4 months each
+3. Add support for special annotated dates
+4. Build first PDF proof page
 
 ## Future Tasks
 
-- Build full PDF generator
-- Add layout customization
-- Add ChatGPT file automation
+- Design cover page
+- Decide annotation style
+- Build full 6-page inside layout
+- Add final print styling
