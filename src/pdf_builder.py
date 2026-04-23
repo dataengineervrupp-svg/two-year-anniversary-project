@@ -470,3 +470,66 @@ def build_combined_pdf(
 
     c.save()
     return output_path
+
+def draw_blank_page(c: canvas.Canvas) -> None:
+    """
+    Intentionally blank page for booklet imposition.
+    """
+    pass
+
+
+def build_imposed_booklet_pdf(
+    output_path: str | Path,
+    pages: List[PageData],
+) -> Path:
+    """
+    Build print-imposed PDF for 2-up duplex booklet printing.
+
+    Physical order requested:
+    Sheet 1:
+        blank, cover, blank, legend
+
+    Sheet 2:
+        calendar page 4, calendar page 1,
+        calendar page 2, calendar page 3
+    """
+    if len(pages) != 4:
+        raise ValueError(
+            f"Expected exactly 4 inside calendar pages, got {len(pages)}"
+        )
+
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    c = canvas.Canvas(str(output_path), pagesize=letter)
+
+    # Sheet 1 side A: blank, cover
+    draw_blank_page(c)
+    c.showPage()
+
+    draw_cover_page(c)
+    c.showPage()
+
+    # Sheet 1 side B: blank, legend
+    draw_blank_page(c)
+    c.showPage()
+
+    draw_legend_page(c)
+    c.showPage()
+
+    # Sheet 2 side A: calendar page 4, calendar page 1
+    draw_page_of_months(c, pages[3])
+    c.showPage()
+
+    draw_page_of_months(c, pages[0])
+    c.showPage()
+
+    # Sheet 2 side B: calendar page 2, calendar page 3
+    draw_page_of_months(c, pages[1])
+    c.showPage()
+
+    draw_page_of_months(c, pages[2])
+    c.showPage()
+
+    c.save()
+    return output_path
