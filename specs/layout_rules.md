@@ -1,16 +1,18 @@
 # Layout Rules
 
-## Month Page Layout
+## Overall Page Style
 
-- Month title at top
-- Weekday headers below title
-- Date grid beneath weekday headers
+Each inside page should feel like a single continuous composition rather than four separate boxed calendars.
 
-## Grid Behavior
+## Month Arrangement
 
-- Weeks begin on Monday or Sunday (TBD)
-- Include leading/trailing days (TBD)
+- Four months per page
+- Arranged in a 2x2 layout
+- No heavy borders around each month
+- No abrupt visual break between adjacent months
 
-## Notes Section
+## Visual Treatment
 
-(TBD — optional notes area under calendar)
+- Calendar is a background layer for later calligraphy and decoration
+- Use subtle lines and light structure only
+- Preserve whitespace and page flow across the full sheet

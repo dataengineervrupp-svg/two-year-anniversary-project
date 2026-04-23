@@ -174,7 +174,7 @@ def default_special_dates() -> List[SpecialDate]:
 def build_project_calendar_data() -> List[PageData]:
     """
     Build the inside calendar pages for the project:
-    May 2024 through April 2026, 4 months per page.
+    May 2024 through April 2026, 6 months per page.
     """
     months = build_calendar_range(
         start_year=2024,
@@ -185,7 +185,7 @@ def build_project_calendar_data() -> List[PageData]:
         week_starts_on_sunday=True,
     )
 
-    return chunk_months_into_pages(months, months_per_page=4)
+    return chunk_months_into_pages(months, months_per_page=6)
 
 
 if __name__ == "__main__":
