@@ -29,3 +29,9 @@ Create a printable anniversary calendar gift for Connie.
 - Date box occupies about 10% of total page area
 - Emoji story appears above the date box
 - Cover is intentionally simple to allow later decorative additions
+
+## Final Output Structure
+
+- Page 1: cover page
+- Pages 2-5: inside calendar pages
+- Final combined PDF includes cover plus all inside pages

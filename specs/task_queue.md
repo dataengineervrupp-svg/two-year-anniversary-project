@@ -2,14 +2,12 @@
 
 ## Current Tasks
 
-1. Review printed proof of inside pages
-2. Review printed proof of cover page
-3. Tune cover-page typography and spacing if needed
-4. Finalize special-date annotations
+1. Review final combined PDF
+2. Review final print on intended paper
+3. Add handwritten title/message to cover page
+4. Finalize special-date annotations if needed
 
 ## Future Tasks
 
-- Add final special-date markers and symbols
-- Decide whether to merge cover and inside pages into one final PDF
-- Tune for final print quality
-- Export final complete anniversary calendar PDF
+- Make any final spacing or typography adjustments
+- Export final gift-ready version

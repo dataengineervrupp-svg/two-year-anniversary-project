@@ -15,10 +15,10 @@ Inside Pages: 4
 
 ## Cover Page
 
-Feature date: April 29, 2026
-Main element: single calendar-style date box
-Placement: optical center
-Story text: emoji-based relationship origin story above the date box
+Feature dates: April 29, 2024 and April 29, 2026
+Main elements: two calendar-style date boxes with arrow between them
+Horizontal layout: 20% margin / 20% box / 20% gap / 20% box / 20% margin
+Placement: lower half of page to leave room for handwritten message above
 
 ## Print Style
 
@@ -32,3 +32,9 @@ Allow space for later handwritten calligraphy and decoration
 - No separate boxed calendars on inside pages
 - Weekday labels shown once per column
 - Inline month labels shown where each month begins
+
+## Final Deliverables
+
+- Standalone cover-page PDF
+- Standalone inside-pages PDF
+- Final combined PDF with cover followed by inside pages

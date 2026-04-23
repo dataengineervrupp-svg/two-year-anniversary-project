@@ -39,3 +39,12 @@ Refined cover page layout.
 - Lowered cover-page design to leave room for handwritten message above
 - Set cover-page horizontal layout to 20/20/20/20/20 proportions
 - Confirmed printed proof looks good
+
+## v0.5
+
+Created final combined PDF assembly.
+
+### Changes
+- Added function to generate one PDF containing the cover page plus all inside pages
+- Kept standalone cover and inside-page PDFs for proofing
+- Final combined PDF now represents the current complete printable calendar

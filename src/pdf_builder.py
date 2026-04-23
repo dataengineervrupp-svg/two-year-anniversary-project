@@ -394,3 +394,30 @@ def build_full_pdf(
 
     c.save()
     return output_path
+
+
+def build_combined_pdf(
+    output_path: str | Path,
+    pages: List[PageData],
+) -> Path:
+    """
+    Build the final combined PDF:
+    - cover page first
+    - then all inside calendar pages
+    """
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    c = canvas.Canvas(str(output_path), pagesize=letter)
+
+    # Cover page
+    draw_cover_page(c)
+    c.showPage()
+
+    # Inside pages
+    for page_data in pages:
+        draw_page_of_months(c, page_data)
+        c.showPage()
+
+    c.save()
+    return output_path
