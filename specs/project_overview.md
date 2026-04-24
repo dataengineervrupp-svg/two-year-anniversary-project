@@ -45,3 +45,15 @@ The imposed print-order PDF contains 8 pages:
 6. Calendar Page 1
 7. Calendar Page 2
 8. Calendar Page 3
+
+## pdf creation
+
+ReportLab generates pages directly; do not use pypdf, Pypdf2, or any external pdf merging library.
+Open one ReportLab canvas: draw cover, draw blanks / legend / calendar pages in imposed order
+Save final PDF
+
+## Imports
+The generated project must use a simple flat `src/` module structure.
+Files inside `src/` should import sibling modules consistently.
+Do not generate nested `src/src` paths.
+Do not reference `src.module_name` from inside files already located in `src`.

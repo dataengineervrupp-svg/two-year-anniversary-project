@@ -1,6 +1,9 @@
 # local files that should stay secret
 dating_log_connie.csv
 test.py
+.env
+ai_builder/generated_project
+ai_builder/snapshots
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
