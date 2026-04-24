@@ -1,16 +1,21 @@
 from __future__ import annotations
 
 import json
+import re
 import os
 from pathlib import Path
 
 from dotenv import load_dotenv
 from openai import OpenAI
+import shutil
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SPECS_DIR = PROJECT_ROOT / "specs"
 OUTPUT_DIR = PROJECT_ROOT / "ai_builder" / "generated_project"
+if OUTPUT_DIR.exists():
+    shutil.rmtree(OUTPUT_DIR)
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 MODEL = "gpt-5.4"
 
@@ -24,37 +29,87 @@ def read_specs() -> str:
 
     return "".join(chunks)
 
+PROMPTS_DIR = PROJECT_ROOT / "ai_builder" / "prompts"
+
+def read_prompt(filename: str) -> str:
+    path = PROMPTS_DIR / filename
+    if not path.exists():
+        raise FileNotFoundError(f"Missing prompt file: {path}")
+    return path.read_text(encoding="utf-8")
 
 def get_client() -> OpenAI:
     load_dotenv()
     return OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
+def extract_json(text: str) -> dict:
+    """
+    Extract JSON object from model response.
+    """
+
+    match = re.search(r"\{.*\}", text, re.DOTALL)
+
+    if not match:
+        raise ValueError("No JSON object found in response")
+
+    json_text = match.group()
+
+    return json.loads(json_text)
 
 def ask_for_file_plan(client: OpenAI, specs_text: str) -> list[dict]:
+    system_prompt = read_prompt("system_prompt.md")
+    file_plan_prompt = read_prompt("file_plan_prompt.md")
     prompt = f"""
-You are generating a local Python project from markdown specifications.
+    {file_plan_prompt}
 
-Return ONLY valid JSON.
+    Project specifications:
 
-The JSON must be a list of files to create.
-Each item must have:
-- path
-- purpose
-- dependencies
+    {specs_text}
 
-Do not include markdown fences.
+    Your task:
 
-Specifications:
-{specs_text}
-"""
+    Create a complete file plan.
 
+    Return ONLY valid JSON.
+
+    The JSON must be:
+
+    {{
+    "files": [
+        {{
+        "path": "relative/file/path.py",
+        "purpose": "short description",
+        "dependencies": ["file1.py"]
+        }}
+    ]
+    }}
+
+    Rules:
+
+    - Return JSON only
+    - No commentary
+    - No explanations
+    - No markdown fences
+    - No extra text before or after JSON
+    - config.py must appear first
+    - main.py must appear last
+    - Files must be listed in dependency order
+    """
     response = client.responses.create(
         model=MODEL,
-        input=prompt,
+        input=[
+            {
+                "role": "system",
+                "content": system_prompt,
+            },
+            {
+                "role": "user",
+                "content": prompt,
+            },
+        ],
     )
-
-    return json.loads(response.output_text)
-
+    plan_obj = extract_json(response.output_text)
+    file_plan = plan_obj["files"]
+    return file_plan
 
 def generate_file(client: OpenAI, specs_text: str, file_plan: list[dict], file_item: dict) -> str:
     prompt = f"""
