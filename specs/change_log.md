@@ -48,3 +48,15 @@ Created final combined PDF assembly.
 - Added function to generate one PDF containing the cover page plus all inside pages
 - Kept standalone cover and inside-page PDFs for proofing
 - Final combined PDF now represents the current complete printable calendar
+
+## v0.6
+
+Added annotation framework and booklet print-order output.
+
+### Changes
+- Added category-driven date annotations from `dating_log_connie.csv`
+- Added annotation markers using `CATEGORY_STYLES`
+- Added generated legend page
+- Added final booklet print-order PDF
+- Added blank pages for booklet imposition
+- Reordered final booklet pages for two-up duplex printing

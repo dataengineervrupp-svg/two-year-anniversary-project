@@ -2,39 +2,55 @@
 
 ## Calendar Scope
 
-Start Month: May 2024
-End Month: April 2026
+Start Month: May 2024  
+End Month: April 2026  
 Total Months: 24
 
-## Current Pagination
+## Inside Pages
 
-Months Per Page: 6
-Columns Per Page: 2
-Months Per Column: 3
-Inside Pages: 4
+Months Per Page: 6  
+Columns Per Page: 2  
+Months Per Column: 3  
+Inside Calendar Pages: 4
 
 ## Cover Page
 
-Feature dates: April 29, 2024 and April 29, 2026
-Main elements: two calendar-style date boxes with arrow between them
-Horizontal layout: 20% margin / 20% box / 20% gap / 20% box / 20% margin
+Feature dates: April 29, 2024 and April 29, 2026  
+Main elements: two calendar-style date boxes with an arrow between them  
+Horizontal layout: 20% margin / 20% box / 20% gap / 20% box / 20% margin  
 Placement: lower half of page to leave room for handwritten message above
 
-## Print Style
+## Legend Page
 
-Printed on heavy art paper
-Allow space for later handwritten calligraphy and decoration
+- Generated from `CATEGORY_STYLES` in `src/annotations.py`
+- Shows each marker and its label
+- Appears as the final content page
 
-## Layout Requirements
+## Booklet Printing
 
-- Seamless visual flow within each column
-- No repeated leading or trailing days between adjacent months
-- No separate boxed calendars on inside pages
-- Weekday labels shown once per column
-- Inline month labels shown where each month begins
+Final booklet is printed:
+
+- 2 pages per sheet
+- double-sided
+- on heavy art paper
+- then bound as a small book
+
+## Imposed Print Order
+
+The booklet print-order PDF should contain:
+
+1. Blank
+2. Cover
+3. Blank
+4. Legend
+5. Calendar Page 4
+6. Calendar Page 1
+7. Calendar Page 2
+8. Calendar Page 3
 
 ## Final Deliverables
 
-- Standalone cover-page PDF
-- Standalone inside-pages PDF
-- Final combined PDF with cover followed by inside pages
+- `calendar_cover_page.pdf`
+- `calendar_inside_pages.pdf`
+- `calendar_complete.pdf`
+- `calendar_booklet_print_order.pdf`

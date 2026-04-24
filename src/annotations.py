@@ -52,16 +52,15 @@ EVENT_DATES = {
 }
 
 CATEGORY_STYLES = {
+    "Trip": {"marker": "T", "label": "Trip"},
     "Date": {"marker": "D", "label": "Date"},
     "Casual Date": {"marker": "C", "label":"Casual Date"},
     "Category 3": {"marker": "3", "label":"Category 3"},
-    "Trip": {"marker": "T", "label": "Trip"},
     "Summer Blockbuster": {"marker": "a", "label": "Summer Blockbuster"},
     "Wine Class": {"marker": "p", "label": "Wine Class"},
     "The Barn": {"marker":"B", "label":"The Barn"},
     "Other": {"marker":"O", "label":"Other"}
 }
-
 
 def parse_iso_date(value: str) -> date:
     return date.fromisoformat(value)

@@ -131,7 +131,7 @@ def draw_continuous_column(
     for row_idx, week in enumerate(weeks):
         if week.starts_month:
             c.setFillColor(TEXT_LIGHT)
-            c.setFont("Helvetica-Bold", 8)
+            c.setFont("Helvetica-Bold", 12)
             c.drawString(grid_left, current_y_top - 7, f"{week.month_name} {week.year}")
             current_y_top -= month_label_gap
 
@@ -160,22 +160,30 @@ def draw_continuous_column(
 
         # Day numbers
         for col_idx, day in enumerate(week.days):
+
             if not day.in_current_month:
                 continue
-
             text_x = grid_left + col_idx * col_width + 3
-            text_y = row_top - 9
-
+            # ---- Draw day number ----
+            day_y = row_top - 9
             c.setFillColor(TEXT_DARK)
-            c.setFont("Helvetica", 7.5)
-
-            label = str(day.day)
-
+            c.setFont("Helvetica", 10)
+            c.drawString(
+                text_x,
+                day_y,
+                str(day.day),
+            )
+            # ---- Draw annotations on second line ----
             if day.annotations:
-                marker_text = "/".join(day.annotations)
-                label = f"{day.day} {marker_text}"
-
-            c.drawString(text_x, text_y, label)
+                marker_text = ", ".join(day.annotations[:2])
+                annotation_y = day_y - 16
+                c.setFillColor(TEXT_DARK)
+                c.setFont("Helvetica", 10)
+                c.drawString(
+                    text_x,
+                    annotation_y,
+                    marker_text,
+                )
 
         current_y_top = row_bottom
 
@@ -401,7 +409,7 @@ def draw_legend_page(c: canvas.Canvas) -> None:
     """
     Draw a legend page based on CATEGORY_STYLES from annotations.py.
     """
-    SOFT_TEXT = Color(0.35, 0.35, 0.35)
+    SOFT_TEXT = Color(0.2, 0.2, 0.2)
     LIGHT_LINE = Color(0.82, 0.82, 0.82)
     c.setFillColor(SOFT_TEXT)
     title_y = PAGE_HEIGHT * 0.78

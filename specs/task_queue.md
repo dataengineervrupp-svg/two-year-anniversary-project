@@ -2,12 +2,14 @@
 
 ## Current Tasks
 
-1. Review final combined PDF
-2. Review final print on intended paper
-3. Add handwritten title/message to cover page
-4. Finalize special-date annotations if needed
+1. Print proof of `calendar_booklet_print_order.pdf`
+2. Confirm booklet page order after folding/binding
+3. Add handwritten cover message
+4. Add final calligraphy and decoration
+5. Review annotation markers for readability
 
 ## Future Tasks
 
-- Make any final spacing or typography adjustments
-- Export final gift-ready version
+- Adjust marker styling if needed
+- Add or revise date categories
+- Make final print-quality export

@@ -6,32 +6,42 @@ Create a printable anniversary calendar gift for Connie.
 
 ## Concept
 
-- Cover page highlights April 29, 2026
+- Cover highlights April 29, 2024 → April 29, 2026
 - Inside pages cover May 2024 through April 2026
-- Calendar will be printed on heavy art paper
-- Final design should leave room for hand-added calligraphy and decoration
+- Calendar is printed on heavy art paper
+- Final design leaves room for hand-added calligraphy and decoration
+- Final booklet is printed two pages per sheet, double-sided, then bound as a small book
 
-## Current Inside-Page Layout
+## Inside-Page Layout
 
 - 24 months total
 - 6 months per page
+- 4 inside calendar pages
 - 2 columns per page
 - 3 months per column
 - Monthly dates flow continuously within each column
 - Weekday headers appear once at the top of each column
-- Month transitions are labeled inline within the column
+- Month transitions are labeled inline
 - Non-current-month dates are not shown
 
-## Current Cover-Page Layout
+## Cover Layout
 
-- One central calendar-style date box
-- Date box placed near the optical center
-- Date box occupies about 10% of total page area
-- Emoji story appears above the date box
-- Cover is intentionally simple to allow later decorative additions
+- Two calendar-style date boxes
+- Left box: April 29, 2024
+- Right box: April 29, 2026
+- Arrow between boxes
+- Small heart beneath
+- Top area left open for handwritten message
 
-## Final Output Structure
+## Final Booklet Structure
 
-- Page 1: cover page
-- Pages 2-5: inside calendar pages
-- Final combined PDF includes cover plus all inside pages
+The imposed print-order PDF contains 8 pages:
+
+1. Blank
+2. Cover
+3. Blank
+4. Legend
+5. Calendar Page 4
+6. Calendar Page 1
+7. Calendar Page 2
+8. Calendar Page 3
