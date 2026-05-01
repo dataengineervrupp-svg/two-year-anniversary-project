@@ -53,6 +53,17 @@ def extract_json(text: str) -> dict:
 
     return json.loads(json_text)
 
+def load_manifest() -> dict:
+    path = OUTPUT_DIR / "build_manifest.json"
+    if not path.exists():
+        return {"files": []}
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def save_manifest(manifest: dict) -> None:
+    path = OUTPUT_DIR / "build_manifest.json"
+    path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+
 def ask_for_file_plan(client: OpenAI, specs_text: str) -> list[dict]:
     system_prompt = read_prompt("system_prompt.md")
     file_plan_prompt = read_prompt("file_plan_prompt.md")
@@ -105,11 +116,11 @@ def ask_for_file_plan(client: OpenAI, specs_text: str) -> list[dict]:
     return file_plan
 
 def generate_file(client: OpenAI, specs_text: str, file_plan: list[dict], file_item: dict) -> str:
+    config_path = OUTPUT_DIR / "src" / "config.py"
     if file_item["path"] != "src/config.py" and not config_path.exists():
         raise RuntimeError(
             "config.py must be generated before other files."
         )
-    config_path = OUTPUT_DIR / "src" / "config.py"
     if config_path.exists():
         config_text = config_path.read_text(encoding='utf-8')
     else:
@@ -121,6 +132,7 @@ def generate_file(client: OpenAI, specs_text: str, file_plan: list[dict], file_i
         All constants must be reused exactly.
         Do not rename constants.
         Do not create duplicates.
+
         """
     else:
         config_block = ""
@@ -138,9 +150,12 @@ Full file plan:
 Generate this file:
 {json.dumps(file_item, indent=2)}
 
+{config_block}
+
+The csv file for annotations is dating_log_connie.csv in the root folder. Use column 
+
 """
 
-    
     response = client.responses.create(
         model=MODEL,
         input=prompt,
@@ -175,6 +190,14 @@ def main() -> None:
 
     for file_item in file_plan:
         content = generate_file(client, specs_text, file_plan, file_item)
+        manifest = load_manifest()
+        manifest["files"].append({
+            "path": file_item["path"],
+            "purpose": file_item["purpose"],
+            "dependencies": file_item["dependencies"],
+            "note": "Generated successfully"
+        })
+        save_manifest(manifest)
         write_file(file_item["path"], content)
         compile(content, file_item["path"], "exec")
 
