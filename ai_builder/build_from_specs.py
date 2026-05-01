@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 from openai import OpenAI
 import shutil
 
-
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SPECS_DIR = PROJECT_ROOT / "specs"
 OUTPUT_DIR = PROJECT_ROOT / "ai_builder" / "generated_project"
@@ -17,8 +16,7 @@ if OUTPUT_DIR.exists():
     shutil.rmtree(OUTPUT_DIR)
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-MODEL = "gpt-5.4"
-
+MODEL = "gpt-5.4-mini"
 
 def read_specs() -> str:
     chunks = []
@@ -66,13 +64,9 @@ def ask_for_file_plan(client: OpenAI, specs_text: str) -> list[dict]:
     {specs_text}
 
     Your task:
-
     Create a complete file plan.
-
     Return ONLY valid JSON.
-
     The JSON must be:
-
     {{
     "files": [
         {{
@@ -84,7 +78,6 @@ def ask_for_file_plan(client: OpenAI, specs_text: str) -> list[dict]:
     }}
 
     Rules:
-
     - Return JSON only
     - No commentary
     - No explanations
@@ -112,13 +105,30 @@ def ask_for_file_plan(client: OpenAI, specs_text: str) -> list[dict]:
     return file_plan
 
 def generate_file(client: OpenAI, specs_text: str, file_plan: list[dict], file_item: dict) -> str:
+    if file_item["path"] != "src/config.py" and not config_path.exists():
+        raise RuntimeError(
+            "config.py must be generated before other files."
+        )
+    config_path = OUTPUT_DIR / "src" / "config.py"
+    if config_path.exists():
+        config_text = config_path.read_text(encoding='utf-8')
+    else:
+        config_text = None
+    if config_text:
+        config_block = f"""
+        Existing config.py:
+        {config_text}
+        All constants must be reused exactly.
+        Do not rename constants.
+        Do not create duplicates.
+        """
+    else:
+        config_block = ""
     prompt = f"""
 You are generating one file for a local Python project.
-
 Return ONLY the full file content.
 Do not include markdown fences.
 Do not include explanations.
-
 Project specifications:
 {specs_text}
 
@@ -127,8 +137,10 @@ Full file plan:
 
 Generate this file:
 {json.dumps(file_item, indent=2)}
+
 """
 
+    
     response = client.responses.create(
         model=MODEL,
         input=prompt,
@@ -151,6 +163,12 @@ def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     file_plan = ask_for_file_plan(client, specs_text)
+    file_plan.sort(
+        key=lambda f: (
+            f["path"] != "src/config.py",
+            f["path"] == "src/main.py",
+        )
+    )
 
     plan_path = OUTPUT_DIR / "file_plan.json"
     plan_path.write_text(json.dumps(file_plan, indent=2), encoding="utf-8")
@@ -158,6 +176,7 @@ def main() -> None:
     for file_item in file_plan:
         content = generate_file(client, specs_text, file_plan, file_item)
         write_file(file_item["path"], content)
+        compile(content, file_item["path"], "exec")
 
 
 if __name__ == "__main__":
