@@ -2,7 +2,7 @@
 The generated project must use a simple flat `src/` module structure.
 Files inside `src/` should import sibling modules consistently.
 Do not generate nested `src/src` paths.
-Do not reference `src.module_name` from inside files already located in `src`.
+Do not reference `src.module_name` from inside files already located in `src`. If in doubt, assume it's already in src.
 
 ## Variables
 All variables, constants, functions, and classes must be defined
