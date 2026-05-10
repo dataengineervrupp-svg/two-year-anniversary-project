@@ -18,7 +18,7 @@ if OUTPUT_DIR.exists():
     shutil.rmtree(OUTPUT_DIR)
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-MODEL = "gpt-5.4-mini"
+MODEL = "gpt-5.4"
 
 def read_specs() -> str:
     chunks = []
@@ -222,7 +222,7 @@ def main() -> None:
         manifest = load_manifest()
         write_file(file_item["path"], content)
         update_manifest_for_file(file_item)
-        compile(content, file_item["path"], "exec")
+        # compile(content, file_item["path"], "exec")
 
 
 if __name__ == "__main__":
